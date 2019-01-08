@@ -1,0 +1,105 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    ports:
+        - "5432:5432"
+    networks:
+        - local-network
+    environment:
+        POSTGRES_USER: local
+        POSTGRES_PASSWORD: local
+        POSTGRES_DB: local
+    volumes:
+        - local_pgdata:/var/lib/postgresql/data
+        - .:/application/local
+  redis:
+    image: "redis:latest"
+    ports:
+        - "6739:6739"
+    networks:
+        - local-network
+  rabbit1:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit1"
+    environment:
+        RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+        RABBITMQ_DEFAULT_USER: "rabbitmq"
+        RABBITMQ_DEFAULT_PASS: "rabbitmq"
+        RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+        - "15672:15672"
+        - "5672:5672"
+    labels:
+        NAME: "rabbitmq1"
+    volumes:
+        - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
+    container_name: elasticsearch
+    environment:
+      - node.name=es01
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    privileged: true
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.5.0
+    container_name: kibana
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+    ports:
+      - 5601:5601
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+  nginx:
+    image: nginx:latest
+    ports:
+        - 8080:80
+    volumes:
+        - ${PWD}/nginx-config/:/etc/nginx/conf.d/
+    command: /bin/bash -c "nginx -g 'daemon off;'"
+    ulimits:
+      nproc: 65535
+
+volumes:
+  esdata1:
+  local_pgdata: {}
+    
+
+networks:
+    local-network:
+        driver: bridge
