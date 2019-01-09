@@ -15,7 +15,7 @@ func NewListMigration() *ListMigration {
 
 // Migrate for migartion data list
 func (list *ListMigration) Migrate(db *gorm.DB) error {
-	db.AutoMigrate(&model.Article{}, &model.Comment{})
+	db.AutoMigrate(&model.Article{}, &model.Comment{}, &model.Author{})
 
 	return nil
 }

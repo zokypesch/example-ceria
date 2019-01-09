@@ -6,14 +6,23 @@ import "github.com/jinzhu/gorm"
 type Article struct {
 	gorm.Model
 	Title    string    `json:"title" binding:"required"`
-	Author   string    `json:"author" binding:"required"`
+	Tag      string    `json:"tag"`
+	Body     string    `json:"body" binding:"required"`
+	Author   Author    `gorm:"foreignkey:AuthorID" json:"author" binding:"-"`
+	AuthorID uint      `json:"author_id" binding:"nefield=Author.ID"`
 	Comments []Comment `gorm:"foreignkey:ArticleID"`
 }
 
 // Comment struct for table article
 type Comment struct {
 	gorm.Model
-	ArticleID   uint   `json:"article_id" binding:"required"`
-	Name        string `json:"name" binding:"required"`
-	Description string `json:"description" binding:"required"`
+	ArticleID uint   `json:"article_id" binding:"required"`
+	Fullname  string `json:"fullname" binding:"required"`
+	Body      string `json:"body" binding:"required"`
+}
+
+// Author struct for table author
+type Author struct {
+	gorm.Model
+	Fullname string `json:"fullname" binding:"required"`
 }
