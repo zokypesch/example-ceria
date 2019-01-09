@@ -363,7 +363,7 @@
   version = "v1.20.0"
 
 [[projects]]
-  digest = "1:277f69aaa75055f05235e1b58a0b04c354b8cc1b9f1f6c51efda54a84373e000"
+  digest = "1:ee08c621c920b1090442c85c208af450b36e8a0867e6199e283e5cc3a5db6f3d"
   name = "github.com/zokypesch/ceria"
   packages = [
     ".",
@@ -374,8 +374,8 @@
     "util",
   ]
   pruneopts = "UT"
-  revision = "8f3d5e31c776792a9a4b65a4182d9f00e10d735c"
-  version = "0.1.1"
+  revision = "1f72dd46e722fbf069b627d01b7492bac7d62b86"
+  version = "0.1.5"
 
 [[projects]]
   branch = "master"
