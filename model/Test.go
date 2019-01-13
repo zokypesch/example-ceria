@@ -5,13 +5,14 @@ import "github.com/jinzhu/gorm"
 // Article struct for table article
 type Article struct {
 	gorm.Model
-	Title  string  `json:"title" binding:"required"`
+	Title  string  `json:"title" binding:"required,max=10"`
 	Tag    string  `json:"tag"`
 	Body   string  `json:"body" binding:"required"`
-	Author *Author `gorm:"foreignkey:AuthorID" json:"author" binding:"-" ceria:"ignore_elastic"`
+	Author *Author `gorm:"foreignkey:AuthorID" json:"author" binding:"-" ceria:"ignoreStructField"`
 	//field Author is type non slice hirarcy struct please add tag ignore elastic, because elastic cannot convert to string
 	AuthorID uint      `json:"author_id"` //  binding:"nefield=Author.ID"
-	Comments []Comment `gorm:"foreignkey:ArticleID"`
+	Comments []Comment `gorm:"foreignkey:ArticleID" ceria:"ignoreStructField"`
+	Custom   string
 }
 
 // Comment struct for table article

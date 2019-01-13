@@ -6,6 +6,7 @@ import (
 	ceria "github.com/zokypesch/ceria"
 	"github.com/zokypesch/ceria/core"
 	"github.com/zokypesch/ceria/helper"
+	hlp "github.com/zokypesch/ceria/helper"
 	repo "github.com/zokypesch/ceria/repository"
 	routeService "github.com/zokypesch/ceria/route"
 )
@@ -53,4 +54,27 @@ func GetGroup(name string) *ceria.GroupConfiguration {
 		Name:       name,
 		Middleware: nil,
 	}
+}
+
+// GetRabbitMQ for get configuration in rabbitMQ
+func GetRabbitMQ() (*core.RabbitMQCore, error) {
+	config := hlp.NewReadConfigService()
+	config.Init()
+
+	host := config.GetByName("rabbitmq.host")
+	hostname := config.GetByName("rabbitmq.hostname")
+	port := config.GetByName("rabbitmq.port")
+	user := config.GetByName("rabbitmq.user")
+	password := config.GetByName("rabbitmq.password")
+
+	rb, errNew := core.NewServiceRabbitMQ(&core.RabbitMQConfig{
+		Host:       host,
+		Hostname:   hostname,
+		Port:       port,
+		User:       user,
+		Password:   password,
+		WorkerName: "my_task",
+	})
+
+	return rb, errNew
 }
