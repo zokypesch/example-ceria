@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/zokypesch/example-ceria/model"
+
 	core "github.com/zokypesch/ceria/core"
 	"github.com/zokypesch/ceria/helper"
 )
@@ -57,5 +59,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	elastic, _ = core.NewServiceElasticCore(&model.Article{}, hostElastic)
+	elastic.DeleteIndex()
+
+	elastic, _ = core.NewServiceElasticCore(&model.Author{}, hostElastic)
+	elastic.DeleteIndex()
+
+	elastic, _ = core.NewServiceElasticCore(&model.Comment{}, hostElastic)
+	elastic.DeleteIndex()
 
 }
