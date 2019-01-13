@@ -5,7 +5,7 @@ import "github.com/jinzhu/gorm"
 // Article struct for table article
 type Article struct {
 	gorm.Model
-	Title  string  `json:"title" binding:"required,max=10"`
+	Title  string  `json:"title" binding:"required"`
 	Tag    string  `json:"tag"`
 	Body   string  `json:"body" binding:"required"`
 	Author *Author `gorm:"foreignkey:AuthorID" json:"author" binding:"-" ceria:"ignoreStructField"`
